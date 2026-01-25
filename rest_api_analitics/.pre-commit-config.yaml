@@ -1,0 +1,35 @@
+repos:
+  # 1. Базовые хуки для Git
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace    # Удаляет лишние пробелы в конце строк
+      - id: end-of-file-fixer      # Добавляет пустую строку в конце файла
+      - id: check-yaml             # Проверяет синтаксис YAML файлов
+      - id: check-added-large-files # Проверяет, что не добавляются большие файлы
+      - id: check-merge-conflict   # Проверяет наличие конфликтных маркеров (<<<<<<<)
+
+  # 2. Ruff - линтинг и форматирование
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.0
+    hooks:
+      - id: ruff                   # Линтинг и исправление ошибок
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format            # Автоматическое форматирование кода
+
+  # 3. Проверка орфографии
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.4
+    hooks:
+      - id: codespell              # Проверка орфографии в коде
+        args: ["--ignore-words-list=analytics,visualization,pandas,numpy"]
+
+  # 4. Проверка типов (mypy) через uv
+  - repo: local                    # Локальный хук
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: uv run mypy src/    # Запускает mypy через uv
+        language: system
+        pass_filenames: false      # Запускается для всей папки
+        always_run: true           # Всегда запускается
